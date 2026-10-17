@@ -1,38 +1,38 @@
-// One entry per case study. Results only from the client's ad account, never estimated.
-// Media go in public/work/<slug>/. `sample` entries are placeholders and are hidden when PUBLIC_LIVE=1.
+// Everything shown as proof lives here. Only real ads, real names and numbers from the client's ad account.
+// Media go in public/work/<slug>/. A section with nothing in it is hidden.
+// Entries marked `sample: true` show in previews only and are dropped when built with PUBLIC_LIVE=1.
 type L = { en: string; fr: string };
-export type Work = {
-  slug: string;
-  brand: string;
-  sector: L;
-  country: string;
-  year: string;
-  sample?: boolean;
-  reels: { src: string; poster?: string }[];
-  resultLine?: L;
-  story: { before: L; tried: L; happened: L };
+const live = import.meta.env.PUBLIC_LIVE === '1';
+const real = <T extends { sample?: boolean }>(xs: T[]) => (live ? xs.filter((x) => !x.sample) : xs);
+
+export type Ad = { src?: string; poster?: string; brand: string; angle: L; result?: L; sample?: boolean };
+export type Case = {
+  slug: string; brand: string; sector: L; year: string; sample?: boolean;
+  number: string; numberLabel: L; line: L;
+  brief: L; story: { before: L; tried: L; happened: L };
   angles: { en: string[]; fr: string[] };
   results?: { label: L; value: string }[];
+  ads: Ad[];
   quote?: { text: L; who: string };
 };
 
-const sample = (n: number): Work => ({
-  slug: `example-${n}`,
-  brand: `Brand ${n}`,
-  sector: { en: 'E-commerce', fr: 'E-commerce' },
-  country: 'Tunisia',
-  year: '2026',
-  sample: true,
-  reels: [],
-  resultLine: { en: 'Result line goes here', fr: 'Le résultat sera ici' },
-  story: {
-    before: { en: 'Where the brand was before.', fr: 'Où en était la marque.' },
-    tried: { en: 'The angles we wrote and shot.', fr: 'Les angles écrits et tournés.' },
-    happened: { en: 'What the ad account showed.', fr: 'Ce que le compte publicitaire a montré.' },
-  },
-  angles: { en: ['Angle one', 'Angle two', 'Angle three'], fr: ['Angle un', 'Angle deux', 'Angle trois'] },
-});
+// Nothing real yet, so every list is empty and its section stays hidden.
+// Add entries as they arrive (Gecko's own campaign first). Example:
+// { src: '/work/gecko/ad-01.mp4', poster: '/work/gecko/ad-01.jpg', brand: 'Gecko', angle: { en: 'The price', fr: 'Le prix' }, result: { en: '0.9 TND / message', fr: '0,9 TND / message' } }
+const allCases: Case[] = [];
+const heroAd: Ad | undefined = undefined;
+const allAds: Ad[] = [];
+// Logos need the brand's written OK. Shown only once there are 3.
+const allLogos: { name: string; src?: string; sample?: boolean }[] = [];
+// Totals tracked from real clients.
+const allNumbers: { key: 'ads' | 'spend' | 'best'; value: string; sample?: boolean }[] = [];
+// Photos from real shoot days (public/team/). No AI images.
+const allPhotos: { src?: string; alt: L; sample?: boolean }[] = [];
 
-export const work: Work[] = [sample(1), sample(2), sample(3)];
-
-export const visibleWork = () => (import.meta.env.PUBLIC_LIVE === '1' ? work.filter((w) => !w.sample) : work);
+export const cases = real(allCases);
+export const ads = real(allAds);
+export const hero = heroAd && !(live && heroAd.sample) ? heroAd : undefined;
+export const logos = (() => { const l = real(allLogos); return l.length >= 3 ? l : []; })();
+export const numbers = real(allNumbers);
+export const photos = real(allPhotos);
+export const portrait: { src?: string } = {};
