@@ -1,129 +1,138 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Reel from '../../components/Reel.astro';
+import Faq from '../../components/Faq.astro';
+import ApplyFlow from '../../components/ApplyFlow.astro';
+import Plans from '../../components/Plans.astro';
+import ReelCard from '../../components/ReelCard.astro';
+import ReelViewer from '../../components/ReelViewer.astro';
 import { t, type Locale } from '../../i18n/strings';
+import { c } from '../../i18n/copy';
 import { href } from '../../i18n/paths';
 import { langPaths } from '../../i18n/static';
-import { visibleWork } from '../../data/work';
-import { offers, fmt } from '../../data/offers';
+import { ads } from '../../data/work';
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Locale;
 const s = t(lang);
-const work = visibleWork().slice(0, 3);
-const test = offers.find((o) => o.key === 'test')!;
+const h = c(lang).home;
 ---
 <Base lang={lang}>
-  <section class="hero wrap stack center">
-    <p class="eyebrow pill glass">{s.eyebrow}</p>
-    <h1 class="display d-xl">{s.hero.title}</h1>
-    <p class="text text-l measure center">{s.hero.sub}</p>
-    <div class="actions center">
-      <a class="pill primary lg" href={href(lang, 'contact')}>{s.nav.book}</a>
-      <a class="pill glass lg" href={href(lang, 'offers')}>{s.hero.secondary}</a>
-    </div>
-  </section>
-
-  <section class="wrap section tight">
-    <div class="panel glass problem stack">
-      <h2 class="display d-l">{s.home.problemTitle}</h2>
-      <p class="text text-l white">{s.home.problemText}</p>
-    </div>
-  </section>
-
-  <section class="wrap section tight">
-    <div class="grid g2 instead">
-      <h2 class="display d-l">{s.home.insteadTitle}</h2>
-      <p class="text text-l">{s.home.insteadText}</p>
-    </div>
-  </section>
-
-  <section class="wrap section">
-    <div class="row-head">
-      <h2 class="display d-m">{s.home.work}</h2>
-      <a class="link" href={href(lang, 'work')}>{s.home.allWork}</a>
-    </div>
-    {work.length ? (
-      <div class="grid g3 reels reel-row">
-        {work.map((w) => (
-          <a class="work-card" href={href(lang, `work/${w.slug}`)}>
-            <Reel src={w.reels[0]?.src} poster={w.reels[0]?.poster} label={w.sample ? s.work.placeholder : '9:16'} />
-            <p class="eyebrow">{w.brand} · {w.sector[lang]}</p>
-            {w.resultLine && <p class="text text-s">{w.resultLine[lang]}</p>}
-          </a>
+  <section class="on-pink hero">
+    <div class="wrap hero-in">
+      <h1 class="h1 big">
+        {h.title.map((line, i) => (
+          <span class="line"><span class={`rise ${i === 1 ? 'hl' : ''}`} style={`--d:${80 + i * 110}ms`}>{line}</span></span>
         ))}
-      </div>
-    ) : (
-      <div class="panel glass stack"><h3 class="display d-m">{s.work.soon}</h3><p class="text">{s.work.soonText}</p></div>
-    )}
-  </section>
-
-  <section class="wrap section">
-    <h2 class="display d-m">{s.home.method}</h2>
-    <div class="grid g3 steps">
-      {s.method.steps.map((st, i) => (
-        <div class="card glass stack" style="--gap:12px">
-          <p class="eyebrow">0{i + 1}</p>
-          <h3 class="display d-m">{st.name}</h3>
-          <p class="text">{st.text}</p>
+      </h1>
+      <div class="hero-foot rise" style="--d:460ms">
+        <p class="text text-l lede">{h.sub}</p>
+        <div class="actions">
+          <a class="btn primary" href={href(lang, 'apply')}>{h.cta} <span class="arr" aria-hidden="true">→</span></a>
+          <a class="btn" href={href(lang, 'process')}>{h.ctaAlt}</a>
         </div>
-      ))}
+      </div>
+    </div>
+    <div class="ticker" aria-hidden="true">
+      <div class="track">
+        {[0, 1].map(() => <ul>{s.home.formats.map((f) => <li>{f}</li>)}</ul>)}
+      </div>
     </div>
   </section>
 
-  <section class="wrap section">
-    <h2 class="display d-l">{s.home.objectionsTitle}</h2>
-    <div class="objections">
-      {s.home.objections.map((o) => (
-        <div class="obj">
-          <p class="text text-l white">{o.q}</p>
-          <p class="text text-l">{o.a}</p>
+  {ads.length > 0 && (
+    <section class="on-black screen">
+      <div class="wrap">
+        <div class="head rv"><div class="stack" style="--gap:14px"><h2 class="h2">{h.workTitle}</h2><p class="text sub">{h.workSub}</p></div><a class="btn" href={href(lang, 'work')}>{h.workCta} <span class="arr" aria-hidden="true">→</span></a></div>
+        <div class="reels scroll-row">
+          {ads.slice(0, 4).map((ad, i) => <div class="rv" style={`--d:${i * 90}ms`}><ReelCard ad={ad} i={i} lang={lang} /></div>)}
         </div>
-      ))}
+      </div>
+    </section>
+  )}
+
+  <section class="on-white screen">
+    <div class="wrap">
+      <div class="head rv"><h2 class="h2">{h.compareTitle}</h2></div>
+      <div class="vs">
+        <div class="col no rv">
+          <p class="cap">{h.without}</p>
+          <ul>{h.compare.map(([e, no]) => <li><span class="em" aria-hidden="true">{e}</span>{no}</li>)}</ul>
+        </div>
+        <div class="col yes rv" style="--d:140ms">
+          <p class="cap">{h.with}</p>
+          <ul>{h.compare.map(([e, , yes], i) => <li style={`--i:${i}`}><span class="v" aria-hidden="true"></span>{yes}</li>)}</ul>
+          <a class="btn primary" href={href(lang, 'apply')}>{h.compareCta} <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="wrap section">
-    <div class="panel glass offer">
-      <div class="stack">
-        <h2 class="display d-l">{s.home.offerTitle}</h2>
-        <p class="text text-l">{s.home.offerText}</p>
-        <a class="link" href={href(lang, 'offers')}>{s.home.allOffers}</a>
-      </div>
-      <div class="price stack" style="--gap:6px">
-        <p class="eyebrow">{s.offers.launch}</p>
-        <p class="display d-xl">{fmt(test.launch, lang)}</p>
-        <p class="text">{s.offers.tnd} · {s.offers.standard} {fmt(test.standard, lang)}</p>
-      </div>
+  <section class="on-white screen">
+    <div class="wrap">
+      <div class="head rv"><div class="stack" style="--gap:14px"><h2 class="h2">{h.plansTitle}</h2><p class="text sub">{h.plansSub}</p></div><a class="link" href={href(lang, 'offers')}>{h.plansCta} →</a></div>
+      <Plans lang={lang} />
     </div>
   </section>
 
-  <section class="wrap section stack center">
-    <h2 class="display d-l measure center">{s.home.closeTitle}</h2>
-    <p class="text text-l measure center">{s.home.closeText}</p>
-    <div class="actions center">
-      <a class="pill primary lg" href={href(lang, 'contact')}>{s.nav.book}</a>
+  <section class="on-white screen" id="faq">
+    <div class="wrap faq-grid">
+      <div class="head rv stack" style="--gap:14px"><h2 class="h2">{h.faqTitle}</h2><p class="text sub">{s.faq.length} {h.faqCount}</p></div>
+      <div class="rv"><Faq items={s.faq} scroll /></div>
     </div>
   </section>
+
+  <section class="on-pink section apply-sec" id="apply">
+    <div class="wrap"><ApplyFlow lang={lang} /></div>
+  </section>
+
+  <ReelViewer lang={lang} />
 </Base>
 
 <style>
-  .hero { padding-top: clamp(150px, 20vw, 230px); padding-bottom: clamp(48px, 7vw, 96px); --gap: 26px; }
-  .hero .d-xl { max-width: 12ch; margin-inline: auto; }
-  .problem .d-l { max-width: 20ch; }
-  .instead { align-items: end; }
-  .row-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 28px; }
-  .reels { gap: clamp(14px, 2.5vw, 32px); }
-  .work-card { text-decoration: none; display: grid; gap: 10px; }
-  .work-card:hover .reel { border-color: rgba(255,255,255,.5); }
-  .steps { margin-top: 28px; }
-  .objections { margin-top: 32px; display: grid; }
-  .obj { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-block: 22px; border-top: 1px solid var(--glass-border); }
-  .obj:last-child { border-bottom: 1px solid var(--glass-border); }
-  .offer { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; align-items: center; }
-  .price { text-align: right; }
-  @media (max-width: 760px) {
-    .instead, .obj, .offer { grid-template-columns: 1fr; }
-    .obj { gap: 6px; }
-    .price { text-align: left; }
-  }
+  .hero { min-height: 100svh; display: grid; grid-template-rows: 1fr auto; padding-top: calc(var(--header) + 40px); overflow: hidden; }
+  .hero-in { align-self: end; display: grid; gap: clamp(28px, 3vw, 44px); padding-bottom: clamp(32px, 5vh, 56px); }
+  .big { font-size: clamp(54px, 10.4vw, 172px); line-height: .92; letter-spacing: -0.055em; max-width: none !important; }
+  .line { display: block; overflow: hidden; padding: .02em .06em .1em 0; width: fit-content; }
+  .line .rise { display: inline-block; }
+  .rise { animation: up 1000ms var(--ease) both; animation-delay: var(--d); }
+  .hl { position: relative; isolation: isolate; padding: 0 .1em; margin-left: -.1em; }
+  .hl::before { content: ''; position: absolute; inset: .16em -.02em .04em; background: var(--yellow); border-radius: .12em; z-index: -1; transform-origin: left; animation: wipe 800ms 900ms var(--ease) both; }
+  .hero-foot { display: grid; grid-template-columns: minmax(0, 34rem) auto; justify-content: space-between; align-items: end; gap: 24px 48px; padding-top: 24px; border-top: var(--line) solid var(--ink); }
+  .lede { margin: 0; }
+  @keyframes up { from { transform: translateY(100%); opacity: 0; } }
+  @keyframes wipe { from { transform: scaleX(0); } }
+  @media (max-width: 860px) { .hero { min-height: 86svh; } .hero-foot { grid-template-columns: 1fr; } }
+
+  .ticker { overflow: hidden; padding-block: 14px; background: var(--white); border-block: var(--line) solid var(--ink); }
+  .ticker .track { display: flex; width: max-content; animation: slide 60s linear infinite; }
+  .ticker:hover .track { animation-play-state: paused; }
+  .ticker ul { display: flex; list-style: none; margin: 0; padding: 0; }
+  .ticker li { white-space: nowrap; font-weight: 700; font-size: 15px; padding-inline: 18px; }
+  .ticker li::after { content: '✱'; padding-left: 36px; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .rise, .hl::before, .ticker .track { animation: none; } }
+
+  .reels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(14px, 1.8vw, 24px); }
+
+  .vs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(14px, 2vw, 28px); align-items: stretch; }
+  .vs .col { display: grid; gap: 14px; align-content: start; padding: clamp(22px, 2.8vw, 36px); border: var(--line) solid var(--ink); border-radius: var(--r-lg); }
+  .vs ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .vs li { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: center; padding: 11px 10px; border-radius: var(--r-sm); font-size: clamp(16px, 1.35vw, 19px); line-height: 1.3; transition: background 240ms var(--ease), transform 300ms var(--ease); }
+  .cap { margin: 0; font-weight: 700; font-size: 14px; }
+  .no { background: var(--pink-soft); color: var(--ink-2); }
+  .no .em { font-size: 22px; line-height: 1; text-align: center; filter: grayscale(.6); }
+  .no li { text-decoration: line-through; text-decoration-color: rgba(0, 0, 0, .35); text-decoration-thickness: 1px; }
+  .yes { background: var(--yellow-soft); box-shadow: 8px 8px 0 var(--ink); }
+  .yes li { font-weight: 700; }
+  .yes li:hover { background: var(--yellow); transform: translateX(6px); }
+  .yes .btn { justify-self: start; margin-top: 10px; }
+  .v { width: 28px; height: 28px; border-radius: 50%; border: var(--line) solid var(--ink); background: var(--yellow) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.4l2.6 2.6L14 7.6' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 22px no-repeat; transition: transform 300ms var(--spring); }
+  .yes li:hover .v { transform: scale(1.15) rotate(-8deg); }
+  @media (max-width: 860px) { .vs { grid-template-columns: 1fr; } }
+
+  .faq-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .faq-grid .head { margin-bottom: 0; display: grid; }
+  .faq-grid .sub { margin: 0; }
+  @media (max-width: 860px) { .faq-grid { grid-template-columns: 1fr; } }
+
+  .apply-sec { border-top: var(--line) solid var(--ink); }
 </style>

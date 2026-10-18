@@ -1,35 +1,81 @@
 ---
-import Base from "../../layouts/Base.astro";
-import { t, type Locale } from "../../i18n/strings";
-import { href } from "../../i18n/paths";
-import { langPaths } from "../../i18n/static";
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import { type Locale } from '../../i18n/strings';
+import { c } from '../../i18n/copy';
+import { langPaths } from '../../i18n/static';
+import { portrait } from '../../data/work';
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Locale;
-const s = t(lang);
+const a = c(lang).about;
+const n = c(lang).nav;
 ---
-<Base lang={lang} title={s.about.title}>
-  <section class="wrap page-head stack">
-    <h1 class="display d-xl">{s.about.title}</h1>
-    <p class="text text-l measure">{s.about.intro}</p>
+<Base lang={lang} title={n.about}>
+  <section class="page-head">
+    <div class="wrap stack center" style="--gap:22px">
+      <h1 class="h1 rv">{a.title}</h1>
+      <p class="text text-l soft measure rv" style="--d:100ms">{a.sub}</p>
+    </div>
   </section>
-  <section class="wrap section tight">
-    <div class="panel glass founder">
-      <div class="photo" role="img" aria-label={s.about.founderName}><span class="eyebrow">{s.about.photo}</span></div>
-      <div class="stack">
-        <p class="eyebrow">{s.about.founder}</p>
-        <h2 class="display d-l">{s.about.founderName}</h2>
-        <p class="text text-l">{s.about.founderText}</p>
-        <p class="text">{s.about.where}</p>
+
+  <section class="heni-sec">
+    <div class="wrap heni">
+      <figure class="photo rv">
+        {portrait.src ? <img src={portrait.src} alt={a.heniTitle} /> : <div class="mono">g.</div>}
+      </figure>
+      <div class="stack rv" style="--gap:18px; --d:120ms">
+        <p class="label">{a.heniLabel}</p>
+        <h2 class="h2">{a.heniTitle}</h2>
+        <p class="role">{a.heniRole}</p>
+        <p class="text text-l soft measure">{a.heniText}</p>
       </div>
     </div>
   </section>
-  <section class="wrap section stack center">
-    <h2 class="display d-l measure center">{s.home.closeTitle}</h2>
-    <div class="actions center"><a class="pill primary lg" href={href(lang, 'contact')}>{s.nav.book}</a></div>
+
+  <section class="on-paper section">
+    <div class="wrap">
+      <div class="head rv"><h2 class="h2">{a.whyLabel}</h2></div>
+      <ol class="why">
+        {a.why.map((w, i) => (
+          <li class="rv" style={`--d:${i * 80}ms`}>
+            <span class={`dot ${['p', 'y', 'g', 'i'][i]}`} aria-hidden="true">{i + 1}</span>
+            <h3 class="h3">{w.t}</h3>
+            <p class="text soft">{w.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
   </section>
+
+  <section class="section">
+    <div class="wrap feel">
+      <div class="stack rv" style="--gap:16px">
+        <h2 class="h2">{a.feelLabel}</h2>
+        <p class="text soft">{a.baseLabel}. {a.base}</p>
+      </div>
+      <ul class="ticks-list big-ticks rv" style="--d:100ms">{a.feel.map((f) => <li>{f}</li>)}</ul>
+    </div>
+  </section>
+
+  <Cta lang={lang} title={a.cta} />
 </Base>
+
 <style>
-  .founder { display: grid; grid-template-columns: minmax(200px, 360px) 1fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
-  .photo { aspect-ratio: 4 / 5; border-radius: var(--radius-card); border: 1px solid var(--glass-border); background: rgba(5,10,24,.5); display: grid; place-items: center; }
-  @media (max-width: 760px) { .founder { grid-template-columns: 1fr; } .photo { max-width: 320px; } }
+  .page-head .h1 { max-width: 15ch; }
+  .heni-sec { padding-bottom: var(--section); }
+  .heni { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(40px, 7vw, 112px); align-items: center; }
+  .photo { margin: 0; aspect-ratio: 4 / 5; border-radius: var(--r-lg); overflow: hidden; background: #fff; border: var(--line) solid var(--ink); box-shadow: 8px 8px 0 var(--pink); }
+  .photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: transform 1200ms var(--ease); }
+  .photo:hover img { transform: scale(1.03); }
+  .mono { height: 100%; display: grid; place-items: center; font-weight: 700; font-size: 160px; letter-spacing: -0.06em; }
+  .role { margin: -6px 0 0; font-weight: 600; }
+  .why { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 22px); }
+  .why li { display: grid; gap: 12px; align-content: start; padding: clamp(26px, 3vw, 40px); background: var(--white); border-radius: var(--r-lg); border: var(--line) solid var(--ink); transition: transform 500ms var(--ease), box-shadow 500ms var(--ease), opacity 900ms var(--ease), filter 900ms var(--ease); }
+  .why li.in:hover { transform: translate(-4px, -4px); box-shadow: var(--shadow-2); }
+  .dot { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-weight: 700; margin-bottom: 12px; }
+  .dot.p { background: var(--pink); } .dot.y { background: var(--yellow); } .dot.g { background: var(--pink-soft); } .dot.i { background: var(--ink); color: #fff; }
+  .why .text { max-width: 30rem; }
+  .feel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .big-ticks { gap: 18px; font-size: var(--body-l); font-weight: 500; }
+  @media (max-width: 860px) { .heni, .why, .feel { grid-template-columns: 1fr; } .photo { max-width: 420px; } }
 </style>

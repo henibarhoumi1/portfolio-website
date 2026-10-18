@@ -1,68 +1,64 @@
-/* Gecko brand tokens, direction 02 "Teal and orange".
-   Navy base, faded teal and orange glows, frosted glass surfaces.
-   Fonts: Instrument Serif for headlines, Geist for everything else. One font per line. */
-
-@font-face { font-family: "Geist"; src: url("/fonts/geist-normal-latin.woff2") format("woff2"); font-weight: 100 900; font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family: "Geist"; src: url("/fonts/geist-normal-latin-ext.woff2") format("woff2"); font-weight: 100 900; font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C4, U+2C60-2C7F, U+A720-A7FF; }
-@font-face { font-family: "Instrument Serif"; src: url("/fonts/instrument-serif-normal-latin.woff2") format("woff2"); font-weight: 400; font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family: "Instrument Serif"; src: url("/fonts/instrument-serif-normal-latin-ext.woff2") format("woff2"); font-weight: 400; font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C4, U+2C60-2C7F, U+A720-A7FF; }
+/* Gecko brand tokens. White pages, pink and yellow blocks, ink lines, one sans family.
+   Corners are softened and depth comes from a small ink offset, not from blur. */
 
 :root {
-  /* colour */
-  --ink:        #050A18;  /* page background, deepest */
-  --navy:       #0B1B3F;  /* gradient start, panels */
-  --deep-blue:  #123172;  /* gradient highlight */
-  --teal:       #5E9E9B;  /* faded teal, glow only */
-  --orange:     #F28A3C;  /* actions: primary buttons, key links */
-  --cream:      #F4F1EC;  /* headlines */
-  --white:      #FFFFFF;  /* UI text */
-  --soft:       #CFD6D8;  /* body text on navy */
+  --pink: #F4C1C4;
+  --pink-soft: #FBE3E4;
+  --yellow: #F3DF9E;
+  --yellow-soft: #FAF0CF;
+  --white: #FFFFFF;
+  --paper: #FFFFFF;
+  --cream: #FFFFFF;
+  --ink: #000000;
+  --ink-2: #5E5953;
+  --hair: var(--ink);
 
-  /* backgrounds */
-  --bg-gradient: linear-gradient(160deg, var(--navy) 0%, #081430 50%, var(--ink) 100%);
-  --glow-teal:   radial-gradient(closest-side, rgba(94,158,155,.45), rgba(94,158,155,0));
-  --glow-orange: radial-gradient(closest-side, rgba(242,138,60,.38), rgba(242,138,60,0));
+  /* older names still used by components */
+  --black: var(--ink);
+  --blue: var(--ink);
 
-  /* glass */
-  --glass-fill:   linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
-  --glass-border: rgba(255,255,255,.22);
-  --glass-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 8px 30px rgba(0,0,0,.25);
-  --glass-blur:   blur(18px) saturate(140%);
+  --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --type: var(--font);
 
-  /* type */
-  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --font-text:    "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-  --display-xl: clamp(48px, 8vw, 112px);
-  --display-l:  clamp(40px, 5.5vw, 72px);
-  --display-m:  clamp(30px, 3.5vw, 44px);
-  --text-l: 21px;
-  --text-m: 17px;
-  --text-s: 14px;
-  --eyebrow: 13px;
+  --h1: clamp(46px, 7.6vw, 120px);
+  --h2: clamp(36px, 5vw, 76px);
+  --h3: clamp(20px, 1.9vw, 26px);
+  --body-l: 19px;
+  --body: 17px;
+  --small: 14px;
+  --label: 13px;
 
-  /* shape */
-  --radius-pill: 999px;
-  --radius-card: 20px;
-  --radius-panel: 28px;
+  --line: 1.5px;
+  --r-sm: 10px;
+  --r: 14px;
+  --r-lg: 18px;
+  --shadow-1: 0 1px 0 rgba(0, 0, 0, .06);
+  --shadow-2: 5px 5px 0 var(--ink);
+  --shadow-3: 0 40px 90px -24px rgba(10, 10, 10, .5);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --spring: cubic-bezier(.34, 1.4, .64, 1);
 }
 
-body { background: var(--ink); color: var(--white); font-family: var(--font-text); -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font); background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
 
-.display { font-family: var(--font-display); font-weight: 400; line-height: 1; letter-spacing: -0.01em; color: var(--cream); text-wrap: balance; }
-.text    { font-family: var(--font-text); font-weight: 400; line-height: 1.5; color: var(--soft); }
-.eyebrow { font-family: var(--font-text); font-weight: 500; font-size: var(--eyebrow); letter-spacing: 0.02em; }
+.h1, .h2, .h3 { font-family: var(--font); font-weight: 700; line-height: 1; letter-spacing: -0.04em; margin: 0; text-wrap: balance; }
+.h1 { font-size: var(--h1); } .h2 { font-size: var(--h2); } .h3 { font-size: var(--h3); letter-spacing: -0.02em; line-height: 1.15; }
+.text { font-weight: 400; font-size: var(--body); line-height: 1.5; }
+.label { font-weight: 700; font-size: var(--label); letter-spacing: 0; color: var(--ink); }
+.soft { color: var(--ink-2); }
 
-.glass {
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-}
-.pill { display: inline-flex; align-items: center; border-radius: var(--radius-pill); padding: 9px 16px; font: 500 var(--text-s)/1 var(--font-text); color: var(--white); }
-.pill.primary { background: var(--orange); color: #1A0B02; font-weight: 600; box-shadow: 0 8px 30px rgba(242,138,60,.35), inset 0 1px 0 rgba(255,255,255,.4); }
-.card { border-radius: var(--radius-card); padding: 22px; }
+.on-white  { background: var(--paper); color: var(--ink); }
+.on-paper  { background: var(--cream); color: var(--ink); }
+.on-pink   { background: var(--pink); color: var(--ink); }
+.on-yellow { background: var(--yellow); color: var(--ink); }
+.on-pink .soft, .on-yellow .soft { color: rgba(0, 0, 0, .72); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 22px; font: 700 15px/1 var(--font); letter-spacing: -0.01em; border: var(--line) solid var(--ink); border-radius: var(--r-sm); background: var(--white); color: var(--ink); text-decoration: none; transition: background 180ms var(--ease), color 180ms var(--ease), transform 220ms var(--ease), box-shadow 220ms var(--ease); }
+.btn.primary { background: var(--ink); color: #fff; }
+.btn.ghost { background: transparent; }
+.rule { border: 0; border-top: var(--line) solid var(--ink); margin: 0; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+.on-black { background: #000; color: #fff; --reel-edge: rgba(255, 255, 255, .28); --reel-shadow: var(--pink); }
+.on-black .soft, .on-black .head .sub { color: rgba(255, 255, 255, .7); }
